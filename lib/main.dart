@@ -140,6 +140,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    _counterClockwiseRotationAnimationController.dispose();
+    _flipAnimationController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.sizeOf(context);
     _counterClockwiseRotationAnimationController
