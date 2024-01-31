@@ -21,6 +21,44 @@ class MyApp extends StatelessWidget {
   }
 }
 
+enum CircleSide {
+  left,
+  right,
+}
+
+class HalfCircleClipper extends CustomClipper<Path> {
+  final CircleSide side;
+
+  HalfCircleClipper({required this.side});
+
+  @override
+  Path getClip(Size size) {
+    final path = Path();
+
+    Offset offset = side == CircleSide.left
+        ? Offset(size.width, size.height)
+        : Offset(0, size.height);
+    bool clockwise = side == CircleSide.left ? false : true;
+
+    if (side == CircleSide.left) {
+      path.moveTo(size.width, 0);
+    }
+
+    path.arcToPoint(
+      offset,
+      clockwise: clockwise,
+      radius: Radius.elliptical(size.width / 2, size.height / 2),
+    );
+
+    path.close();
+
+    return path;
+  }
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => true;
+}
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -38,15 +76,21 @@ class _HomePageState extends State<HomePage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
-              width: size.width / 2.5,
-              height: size.width / 2.5,
-              color: const Color(0xFFeea243),
+            ClipPath(
+              clipper: HalfCircleClipper(side: CircleSide.left),
+              child: Container(
+                width: size.width / 2,
+                height: size.width / 2,
+                color: const Color(0xFFeea243),
+              ),
             ),
-            Container(
-              width: size.width / 2.5,
-              height: size.width / 2.5,
-              color: const Color(0xFF3581b8),
+            ClipPath(
+              clipper: HalfCircleClipper(side: CircleSide.right),
+              child: Container(
+                width: size.width / 2,
+                height: size.width / 2,
+                color: const Color(0xFF3581b8),
+              ),
             ),
           ],
         ),
